@@ -3,16 +3,11 @@ import numpy as np
 import pandas as pd
 import time
 from pathlib import Path
-import tqdm
 
 # list all models to be tried
-from sklearn.ensemble import (
-    GradientBoostingClassifier,
-    RandomForestClassifier,
-)
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import SGDClassifier, LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import cross_val_predict
@@ -38,12 +33,10 @@ def main():
     classifiers = {
         "logreg": LogisticRegression(max_iter=1000),
         "nb": GaussianNB(),
-        "svc": SVC(random_state=config.RANDOM_STATE),
         "rf": RandomForestClassifier(random_state=config.RANDOM_STATE),
         "knn": KNeighborsClassifier(),
         "sgd": SGDClassifier(random_state=config.RANDOM_STATE),
         "dt": DecisionTreeClassifier(random_state=config.RANDOM_STATE),
-        "gb": GradientBoostingClassifier(random_state=config.RANDOM_STATE),
     }
 
     # cross val the models, append result to result df
@@ -51,7 +44,7 @@ def main():
         columns=["model", "accuracy", "f1", "precision", "recall", "time_taken"]
     )
 
-    for key, classifier in tqdm(classifiers.items()):
+    for key, classifier in classifiers.items():
         model_name = classifier.__class__.__name__
 
         start_time = time.time()
@@ -76,6 +69,7 @@ def main():
     print(df_result)
 
 
-# if not already run
-if not Path(config.PATH_MODEL_SELECTION_RES).exists():
-    main()
+if __name__ == "__main__":
+    # if not already run
+    if not Path(config.PATH_MODEL_SELECTION_RES).exists():
+        main()
