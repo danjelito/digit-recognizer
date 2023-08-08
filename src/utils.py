@@ -7,12 +7,14 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import config
 
 
-def load_dataset():
+def load_dataset(load_test_set= False):
     x_train = np.load(config.PATH_X_TRAIN, allow_pickle=True)
     y_train = np.load(config.PATH_Y_TRAIN, allow_pickle=True)
     x_test = np.load(config.PATH_X_TEST, allow_pickle=True)
     y_test = np.load(config.PATH_Y_TEST, allow_pickle=True)
-    return x_train, y_train, x_test, y_test
+    if load_test_set:
+        return x_train, y_train, x_test, y_test
+    return x_train, y_train
 
 
 def plot_digits(arr, label_arr):
