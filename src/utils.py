@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.ndimage import shift, rotate
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+import pickle
 
 import config
 

@@ -11,7 +11,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import cross_val_predict
-import lightgbm as lgb
 
 import model
 import config
@@ -39,7 +38,6 @@ def main(augment= False):
         "rf": RandomForestClassifier(random_state=config.RANDOM_STATE),
         "knn": KNeighborsClassifier(),
         "dt": DecisionTreeClassifier(random_state=config.RANDOM_STATE),
-        "lgb": lgb.LGBMClassifier(),
     }
 
     # cross val the models, append result to result df
