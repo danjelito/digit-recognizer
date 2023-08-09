@@ -10,6 +10,7 @@ import model
 import config
 import utils
 
+
 def main(n_trials):
 
     # load dataset
