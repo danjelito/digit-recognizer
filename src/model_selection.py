@@ -27,16 +27,19 @@ def main(augment=False):
         x_train, y_train = utils.augment_image(x_train, y_train, num_augmented)
 
     # preprocessing
+    # TODO: uncomment after adding deep learning
     # model.pipeline.fit(x_train, y_train)
     # x_train = model.pipeline.transform(x_train)
 
     # try different classifier
+    # TODO: uncomment after adding deep learning
     classifiers = {
         # "logreg": LogisticRegression(max_iter=1000),
         # "nb": GaussianNB(),
         # "rf": RandomForestClassifier(random_state=config.RANDOM_STATE),
         # "knn": KNeighborsClassifier(),
-        "dt": DecisionTreeClassifier(random_state=config.RANDOM_STATE),
+        # "dt": DecisionTreeClassifier(random_state=config.RANDOM_STATE),
+        # TODO: add deep learning, lgb and xgb
     }
 
     # cross val the models, append result to result df
@@ -107,6 +110,7 @@ def main(augment=False):
         )
         .sort_values("f1", ascending=False)
     )
+    # TODO: uncomment after adding deep learning
     # df_result.to_csv(config.PATH_MODEL_SELECTION_RES, index=False)
     print(df_result)
 
