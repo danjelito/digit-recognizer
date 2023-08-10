@@ -99,6 +99,19 @@ def augment_image(x_train, y_train, num_augmented):
     return x_train, y_train
 
 
+def rescale_array(array, target_range):
+    # check the min and max
+    ori_min = np.min(array)
+    ori_max = np.max(array)
+
+    target_min = target_range[0]
+    target_max = target_range[1]
+
+    if ori_min == 0:
+        scaled_array = (((array - ori_min) / (ori_max - ori_min)) * (target_max - target_min)) + target_min
+
+    return scaled_array
+
 
 def get_score(y_true, y_pred, print_result= False):
     """Get and print accuracy, f1, percision and recall"""

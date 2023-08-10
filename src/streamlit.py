@@ -1,20 +1,23 @@
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 import numpy as np
-from PIL import Image, ImageOps
 import matplotlib.pyplot as plt
+from skimage.transform import resize
 
 import predict
+import utils
 
 # Specify canvas parameters in application
 drawing_mode = st.sidebar.selectbox(
     "Drawing tool:", ("freedraw", "line", "rect", "circle")
 )
 
-stroke_width = st.sidebar.slider("Stroke width: ", 20, 60, 20)
+stroke_width = 40
 stroke_color = st.sidebar.color_picker("Stroke color hex: ")
 
 realtime_update = True
+
+st.header('Draw here and I will predict!')
 
 # create a canvas component
 canvas_result = st_canvas(
@@ -22,8 +25,8 @@ canvas_result = st_canvas(
     stroke_width=stroke_width,
     stroke_color=stroke_color,
     update_streamlit=realtime_update,
-    height=784,
-    width=784, 
+    height=500,
+    width=500, 
     drawing_mode=drawing_mode,
     key="canvas",
 )
@@ -35,13 +38,18 @@ if img_cmyk is not None:
     # convert to grayscale
     img_gray = np.sum(img_cmyk, axis=-1)
     # rescale the pixel values to be in the range [0, 255]
-    num = (img_gray - np.min(img_gray))
-    den = (np.max(img_gray) - np.min(img_gray))
-    img_gray = num // den * 255
+    img_gray = utils.rescale_array(img_gray, (0, 255))
+    # resize the image to 28x28
+    img_gray = resize(img_gray, (28, 28))
+    # flatten
+    img_gray = img_gray.flatten().reshape(1, -1)
 
     # predict
-    y_pred = predict.predict(x=img_gray, with_preprocesing= True)
-    st.write(y_pred.shape)
-    print(y_pred)
+    try:
+        y_pred = predict.predict(x=img_gray, with_preprocesing= True)
+        result = f'This is :red[{y_pred[0]}]!'
+        st.header(result)
+    except ValueError:
+        pass
 
     
