@@ -1,11 +1,11 @@
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
+from skimage.transform import resize_local_mean
+from skimage.color import rgb2gray
 import numpy as np
-from skimage.transform import resize
 from PIL import Image
 
 import predict
-import utils
 
 # specify canvas parameters in application
 drawing_mode = st.sidebar.selectbox(
@@ -13,7 +13,7 @@ drawing_mode = st.sidebar.selectbox(
 )
 
 stroke_width = 40
-stroke_color = st.sidebar.color_picker("Stroke color hex: ")
+stroke_color = "black"
 
 realtime_update = True
 
@@ -32,26 +32,27 @@ canvas_result = st_canvas(
 )
 
 # predict here
-img_cmyk = canvas_result.image_data
-if img_cmyk is not None:
-    pass
-    # TODO: convert RGBA to grayscale
-    # convert rgba to grayscale 
-    # rescale
-    # then convert back to array
-    # img_gray = Image.fromarray(img_cmyk, "RGBA").convert('LA')
-    # img_gray = resize(np.asarray(img_gray), output_shape= (28, 28))
+img_rgba = canvas_result.image_data
+if img_rgba is not None:
     
-    # # flatten
-    # img_gray = img_gray.flatten().reshape(1, -1)
+    # get alpha channel only
+    # convert to PIL image
+    img_gray = Image.fromarray(img_rgba[:, :, -1])
+    # resize 
+    img_gray = img_gray.resize((28, 28))
+    # convert back to array
+    # flatten
+    img_flat = np.asarray(img_gray).reshape((1, 784))
 
-    # st.write(img_gray.shape)
+# predict if there is image
+if np.sum(img_rgba) != 0:
+    try:
+        y_pred = predict.predict(x=img_flat, with_preprocesing=True)
+        result = f"This is :red[{y_pred[0]}]!"
+        st.header(result)
+    except ValueError:
+        pass
 
-
-    # # predict
-    # try:
-    #     y_pred = predict.predict(x=img_gray, with_preprocesing=True)
-    #     result = f"This is :red[{y_pred[0]}]!"
-    #     st.header(result)
-    # except ValueError:
-    #     pass
+    # st.write(np.max(img_gray))
+    # st.write(np.shape(img_gray))
+    # st.image(img_gray)
