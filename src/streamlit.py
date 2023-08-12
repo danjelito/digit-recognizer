@@ -26,10 +26,15 @@ with st.sidebar:
                 ''')
     st.divider()
 
-# specify canvas parameters in application
-drawing_mode = st.sidebar.selectbox(
-    "Drawing tool:", ("freedraw", "line", "rect", "circle")
-)
+with st.sidebar:
+    model = st.selectbox(
+        "Select ML model:", ('K-Nearest Classifier', 'Random Forest', 'Logistic Regression')
+    )
+    
+    drawing_mode = st.selectbox(
+        "Drawing tool:", ("freedraw", "line", "rect", "circle")
+    )
+
 
 stroke_width = 40
 stroke_color = "black"
@@ -66,7 +71,7 @@ if img_rgba is not None:
 # predict if there is image
 if np.sum(img_rgba) != 0:
     try:
-        y_pred = predict.predict(x=img_flat, with_preprocesing=True)
+        y_pred = predict.predict(model=model, x=img_flat, with_preprocesing=True)
         result = f"This is :red[{y_pred[0]}]!"
         st.header(result)
     except ValueError:
