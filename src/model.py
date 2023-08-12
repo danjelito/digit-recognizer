@@ -3,6 +3,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import SelectKBest, mutual_info_classif
 from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 import config
 
 pipeline = Pipeline([
@@ -11,5 +13,10 @@ pipeline = Pipeline([
     ("select_k_best", SelectKBest(k=100, score_func=mutual_info_classif)),
 ])
 
-param= {'n_neighbors': 5, 'weights': 'distance', 'algorithm': 'auto', 'leaf_size': 35}
-knc= KNeighborsClassifier(**param)
+knc_param = {'n_neighbors': 5, 'weights': 'distance', 'algorithm': 'auto', 'leaf_size': 35}
+# lr_param = 
+# rf_param = 
+
+knc = KNeighborsClassifier(**knc_param)
+# rf = RandomForestClassifier(**rf_param)
+# lr = LogisticRegression(**lr_param)

@@ -7,6 +7,25 @@ from PIL import Image
 
 import predict
 
+
+with st.sidebar:
+    st.header('Digit Recognizer')
+    st.markdown(':gray[_by Devan Anjelito_]')
+    st.markdown('\n')
+    st.markdown('''This is a demonstration of how a machine learning model
+                can "see" and predict handwriting.
+                ''')
+    st.markdown('\n')
+    st.markdown('''The model used are all simple model which, extraordinarily,
+                works quite well, given the simple architecture of the model.
+                ''')
+    st.markdown('\n')
+    st.markdown('''If you are interested to know more,
+                check out my other projects on [my website](https://danjelito.github.io/)
+                or greet me via [LinkedIn](https://www.linkedin.com/in/devan-anjelito/).
+                ''')
+    st.divider()
+
 # specify canvas parameters in application
 drawing_mode = st.sidebar.selectbox(
     "Drawing tool:", ("freedraw", "line", "rect", "circle")
@@ -52,7 +71,3 @@ if np.sum(img_rgba) != 0:
         st.header(result)
     except ValueError:
         pass
-
-    # st.write(np.max(img_gray))
-    # st.write(np.shape(img_gray))
-    # st.image(img_gray)
