@@ -10,6 +10,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
+from sklearn.gaussian_process import GaussianProcessClassifier, kernels
+from sklearn.neural_network import MLPClassifier
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.model_selection import cross_val_predict, StratifiedKFold
 
 import model
@@ -33,10 +36,13 @@ def main(augment=False):
     # try different classifier
     classifiers = {
         "logreg": LogisticRegression(max_iter=1000),
-        "nb": GaussianNB(),
+        "gauss_nb": GaussianNB(),
         "rf": RandomForestClassifier(random_state=config.RANDOM_STATE),
         "knn": KNeighborsClassifier(),
         "dt": DecisionTreeClassifier(random_state=config.RANDOM_STATE),
+        "gauss_process": GaussianProcessClassifier(1.0 * kernels.RBF(1.0)),
+        "mlp": MLPClassifier(max_iter=1000),
+        "qda": QuadraticDiscriminantAnalysis()
     }
 
     # cross val the models, append result to result df
@@ -107,7 +113,7 @@ def main(augment=False):
         )
         .sort_values("f1", ascending=False)
     )
-    df_result.to_csv(config.PATH_MODEL_SELECTION_RES, index=False)
+    df_result.to_csv(config.PATH_MODEL_SELECTION_RES, index=True)
     print(df_result)
 
 
