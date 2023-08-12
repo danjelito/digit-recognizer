@@ -52,8 +52,8 @@ def optimize_rf(n_trials):
                 "criterion", ["gini", "entropy", "log_loss"]
             ),
             "max_depth": trial.suggest_int("max_depth", 10, 100),
-            "min_samples_split": trial.suggest_int("min_sample_split", 2, 10),
-            "min_samples_leaf": trial.suggest_int("min_sample_leaf", 1, 10),
+            "min_samples_split": trial.suggest_int("min_samples_split", 2, 10),
+            "min_samples_leaf": trial.suggest_int("min_samples_leaf", 1, 10),
             "max_features": trial.suggest_categorical(
                 "max_features", ["sqrt", "log2", None]
             ),

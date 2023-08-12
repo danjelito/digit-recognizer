@@ -26,8 +26,8 @@ rf_param = {
     "n_estimators": 109,
     "criterion": "gini",
     "max_depth": 60,
-    "min_sample_split": 8,
-    "min_sample_leaf": 1,
+    "min_samples_split": 8,
+    "min_samples_leaf": 1,
     "max_features": "sqrt",
 }
 
