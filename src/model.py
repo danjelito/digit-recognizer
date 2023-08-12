@@ -7,13 +7,15 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 import config
 
-pipeline = Pipeline(
-    [
-        ("scale", StandardScaler()),
-        ("compress", PCA(n_components=0.95, random_state=config.RANDOM_STATE)),
-        ("select_k_best", SelectKBest(k=100, score_func=mutual_info_classif)),
-    ]
-)
+
+def create_pipeline():
+    return Pipeline(
+        [
+            ("scale", StandardScaler()),
+            ("compress", PCA(n_components=0.95, random_state=config.RANDOM_STATE)),
+            ("select_k_best", SelectKBest(k=100, score_func=mutual_info_classif)),
+        ]
+    )
 
 knc_param = {
     "n_neighbors": 4,

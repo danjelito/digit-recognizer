@@ -3,6 +3,4 @@ input/x_train.npy
 input/y_test.npy
 input/y_train.npy
 src/sandbox.py
-output/model_knc.pickle
-output/model_lr.pickle
-output/model_rf.pickle
+output/model/
