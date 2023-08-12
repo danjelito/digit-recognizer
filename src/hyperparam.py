@@ -44,14 +44,15 @@ def optimize_knc(n_trials):
 
 
 # random forest
+# set small model for faster performance
 def optimize_rf(n_trials):
     def objective(trial):
         param = {
-            "n_estimators": trial.suggest_int("n_estimators", 10, 200),
+            "n_estimators": trial.suggest_int("n_estimators", 2, 50),
             "criterion": trial.suggest_categorical(
                 "criterion", ["gini", "entropy", "log_loss"]
             ),
-            "max_depth": trial.suggest_int("max_depth", 10, 100),
+            "max_depth": trial.suggest_int("max_depth", 2, 20),
             "min_samples_split": trial.suggest_int("min_samples_split", 2, 10),
             "min_samples_leaf": trial.suggest_int("min_samples_leaf", 1, 10),
             "max_features": trial.suggest_categorical(
@@ -99,7 +100,7 @@ if __name__ == "__main__":
     rf_best_params = optimize_rf(n_trials=n_trials)
     lr_best_params = optimize_lr(n_trials=n_trials)
 
-    print("\n=================================================")
+    print("\n", "=" * 30)
     print(f"knc best params : {knc_best_params}")
     print(f"rf best params : {rf_best_params}")
     print(f"lr best params : {lr_best_params}")
