@@ -10,17 +10,18 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
-from sklearn.gaussian_process import GaussianProcessClassifier, kernels
 from sklearn.neural_network import MLPClassifier
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
-from sklearn.model_selection import cross_val_predict, StratifiedKFold
+from sklearn.model_selection import StratifiedKFold
 
 import model
 import config
 import utils
+import pickle
 
 
 def main(augment=False):
+    
     # load dataset
     x_train, y_train = utils.load_dataset(load_test_set=False)
 
@@ -30,18 +31,29 @@ def main(augment=False):
         x_train, y_train = utils.augment_image(x_train, y_train, num_augmented)
 
     # preprocessing
-    model.pipeline.fit(x_train, y_train)
-    x_train = model.pipeline.transform(x_train)
+    # if fitted pipeline already exists, use that
+    if Path(config.PATH_PIPELINE).exists():
+        with open(config.PATH_PIPELINE, "rb") as file:
+            pipeline = pickle.load(file)
+    # else, create and fit new pipeline
+    else:
+        pipeline = model.create_pipeline()
+        pipeline.fit(x_train, y_train)
+    x_train = pipeline.transform(x_train)
 
     # try different classifier
     classifiers = {
-        "logreg": LogisticRegression(max_iter=1000),
+        "logreg": LogisticRegression(max_iter=1000, 
+                                     n_jobs=-1,
+                                     random_state=config.RANDOM_STATE),
         "gauss_nb": GaussianNB(),
-        "rf": RandomForestClassifier(random_state=config.RANDOM_STATE),
-        "knn": KNeighborsClassifier(),
+        "rf": RandomForestClassifier(n_estimators=20, 
+                                     random_state=config.RANDOM_STATE, 
+                                     n_jobs=-1),
+        "knn": KNeighborsClassifier(n_jobs=-1),
         "dt": DecisionTreeClassifier(random_state=config.RANDOM_STATE),
-        "gauss_process": GaussianProcessClassifier(1.0 * kernels.RBF(1.0)),
-        "mlp": MLPClassifier(max_iter=1000),
+        "mlp": MLPClassifier(max_iter=1000, 
+                             random_state=config.RANDOM_STATE),
         "qda": QuadraticDiscriminantAnalysis()
     }
 
@@ -58,7 +70,7 @@ def main(augment=False):
         ]
     )
 
-    for key, classifier in classifiers.items():
+    for _, classifier in classifiers.items():
         model_name = classifier.__class__.__name__
 
         # run kfold
