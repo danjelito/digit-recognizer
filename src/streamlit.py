@@ -79,12 +79,12 @@ if img_rgba is not None:
     # flatten
     img_flat = np.asarray(img_gray).reshape((1, 784))
 
-# predict if there is image
-if np.sum(img_rgba) != 0:
-    try:
-        with st.spinner("Wait for it, some models are slower than others..."):
-            y_pred = predict.predict(model=model, x=img_flat, with_preprocesing=True)
-        result = f"This is :red[{y_pred[0]}]!"
-        st.header(result)
-    except ValueError:
-        pass
+    # predict if there is image
+    if np.sum(img_rgba) != 0:
+        try:
+            with st.spinner("Wait for it, some models are slower than others..."):
+                y_pred = predict.predict(model=model, x=img_flat, with_preprocesing=True)
+            result = f"This is :red[{y_pred[0]}]!"
+            st.header(result)
+        except ValueError:
+            pass
