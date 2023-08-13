@@ -9,31 +9,43 @@ import predict
 
 
 with st.sidebar:
-    st.header('Digit Recognizer')
-    st.markdown(':gray[_by Devan Anjelito_]')
-    st.markdown('\n')
-    st.markdown('''This is a demonstration of how a machine learning model
-                can "see" and predict handwriting.
-                ''')
-    st.markdown('\n')
-    st.markdown('''The model used are all simple model which, extraordinarily,
-                works quite well, given the simple architecture of the model.
-                ''')
-    st.markdown('\n')
-    st.markdown('''If you are interested to know more,
-                check out my other projects on [my website](https://danjelito.github.io/)
-                or greet me via [LinkedIn](https://www.linkedin.com/in/devan-anjelito/).
-                ''')
+    st.header("Digit Recognizer")
+    st.markdown(":gray[_by Devan Anjelito_]")
+    st.markdown("\n")
+    st.markdown(
+        """This is a demonstration of how a machine learning model
+        can "see" and predict handwriting.
+        """
+    )
+    st.markdown("\n")
+    st.markdown(
+        """The model used are all simple model which, extraordinarily,
+        works quite well, given the simple architecture of the model.
+        """
+    )
+    st.markdown("\n")
+    st.markdown(
+        """If you are interested to know more,
+        check out my other projects on [my website](https://danjelito.github.io/)
+        or greet me via [LinkedIn](https://www.linkedin.com/in/devan-anjelito/).
+        """
+    )
     st.divider()
 
 with st.sidebar:
     model = st.selectbox(
-        "Select ML model:", ('K-Nearest Classifier', 'Random Forest', 'Logistic Regression')
+        "Select ML model:",
+        (
+            "Multi-layer Perceptron",
+            "K-Nearest Classifier",
+            "Random Forest",
+            "Logistic Regression",
+            "Quadratic Discriminant Analysis",
+            "Decision Tree",
+        ),
     )
-    
-    drawing_mode = st.selectbox(
-        "Drawing tool:", ("freedraw", "line", "rect", "circle")
-    )
+
+    drawing_mode = st.selectbox("Drawing tool:", ("freedraw", "line", "rect", "circle"))
 
 
 stroke_width = 40
@@ -58,11 +70,10 @@ canvas_result = st_canvas(
 # predict here
 img_rgba = canvas_result.image_data
 if img_rgba is not None:
-    
     # get alpha channel only
     # convert to PIL image
     img_gray = Image.fromarray(img_rgba[:, :, -1])
-    # resize 
+    # resize
     img_gray = img_gray.resize((28, 28))
     # convert back to array
     # flatten
@@ -71,7 +82,7 @@ if img_rgba is not None:
 # predict if there is image
 if np.sum(img_rgba) != 0:
     try:
-        with st.spinner('Wait for it, some models are slower than others...'):
+        with st.spinner("Wait for it, some models are slower than others..."):
             y_pred = predict.predict(model=model, x=img_flat, with_preprocesing=True)
         result = f"This is :red[{y_pred[0]}]!"
         st.header(result)
