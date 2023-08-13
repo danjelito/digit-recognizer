@@ -5,6 +5,9 @@ from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 import config
 
 
@@ -17,22 +20,39 @@ def create_pipeline():
         ]
     )
 
+
+mlp_params = {
+    "activation": "relu",
+    "solver": "lbfgs",
+    "alpha": 9.846852933268213,
+    "max_iter": 1000,
+}
 knc_param = {
     "n_neighbors": 4,
     "weights": "distance",
-    "algorithm": "ball_tree",
-    "leaf_size": 12,
+    "algorithm": "brute",
+    "leaf_size": 11,
 }
-lr_param = {"C": 2.2458127933062992, "solver": "newton-cg"}
+lr_param = {"C": 0.9383975744448804, "solver": "newton-cg", "max_iter": 1000}
 rf_param = {
-    "n_estimators": 109,
-    "criterion": "gini",
-    "max_depth": 60,
+    "n_estimators": 36,
+    "criterion": "entropy",
+    "max_depth": 18,
     "min_samples_split": 8,
-    "min_samples_leaf": 1,
+    "min_samples_leaf": 3,
     "max_features": "sqrt",
 }
+dt_param = {
+    "criterion": "log_loss",
+    "max_depth": 15,
+    "min_samples_split": 3,
+    "min_samples_leaf": 6,
+    "max_features": None,
+}
 
+mlp = MLPClassifier(**mlp_params)
 knc = KNeighborsClassifier(**knc_param)
 rf = RandomForestClassifier(**rf_param)
 lr = LogisticRegression(**lr_param)
+dt = DecisionTreeClassifier(**dt_param)
+qda = QuadraticDiscriminantAnalysis()

@@ -30,6 +30,7 @@ def optimize_mlp(n_trials):
             ),
             "solver": trial.suggest_categorical("solver", ["lbfgs", "sgd", "adam"]),
             "alpha": trial.suggest_float("alpha", 0.00001, 10, log=True),
+            "max_iter": 1000,
             "random_state": config.RANDOM_STATE,
         }
         clf = MLPClassifier(**param)
@@ -104,6 +105,7 @@ def optimize_lr(n_trials):
                 "solver",
                 ["lbfgs", "liblinear", "newton-cg", "newton-cholesky", "sag", "saga"],
             ),
+            "max_iter": 1000,
             "n_jobs": -1,
         }
         clf = LogisticRegression(**param)

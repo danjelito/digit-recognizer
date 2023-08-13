@@ -23,22 +23,20 @@ def load_dataset():
     return x_train, y_train, x_test, y_test
 
 
-def preprocess_dataset(x_train, y_train, x_test, y_test, save_path=None):
+def preprocess_dataset(x_train, y_train, x_test, y_test):
     # preprocessing
-    pipeline = model.pipeline
+    with open(config.PATH_PIPELINE, "rb") as file:
+        pipeline = pickle.load(file)
     pipeline.fit(x_train, y_train)
     x_train = pipeline.transform(x_train)
     x_test = pipeline.transform(x_test)
-
-    if save_path is not None:
-        save_sklearn_object(pipeline, config.PATH_PIPELINE)
 
     return x_train, y_train, x_test, y_test
 
 
 def train_and_test(model, x_train, y_train, x_test, y_test, save_path=None):
     model_name = model_name = model.__class__.__name__
-    print("=" * 15 , model_name, "=" * 15)
+    print("=" * 15, model_name, "=" * 15)
 
     print("train")
     # cross validate on test set
@@ -59,17 +57,18 @@ def train_and_test(model, x_train, y_train, x_test, y_test, save_path=None):
 if __name__ == "__main__":
     x_train, y_train, x_test, y_test = load_dataset()
     x_train, y_train, x_test, y_test = preprocess_dataset(
-        x_train, y_train, x_test, y_test, save_path=config.PATH_PIPELINE
+        x_train, y_train, x_test, y_test
     )
 
     # train and test each model
     # save model to each path after training
-    train_and_test(
-        model.knc, x_train, y_train, x_test, y_test, save_path=config.PATH_MODEL_KNC
-    )
-    train_and_test(
-        model.rf, x_train, y_train, x_test, y_test, save_path=config.PATH_MODEL_RF
-    )
-    train_and_test(
-        model.lr, x_train, y_train, x_test, y_test, save_path=config.PATH_MODEL_LR
-    )
+    models = {
+        model.mlp: config.PATH_MODEL_MLP,
+        model.knc: config.PATH_MODEL_KNC,
+        model.rf: config.PATH_MODEL_RF,
+        model.dt: config.PATH_MODEL_DT,
+        model.lr: config.PATH_MODEL_LR,
+        model.qda: config.PATH_MODEL_QDA,
+    }
+    for clf, path in models.items():
+        train_and_test(clf, x_train, y_train, x_test, y_test, save_path=path)
