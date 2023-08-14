@@ -6,10 +6,19 @@ import numpy as np
 from PIL import Image
 
 import predict
+from model_description import model_descriptions, model_strengths, model_weaknesses
 
+# set page configuration
+st.set_page_config(
+    page_title= 'Digit Recognizer',
+    page_icon= '🔢',
+    initial_sidebar_state= 'expanded',
+    layout = 'wide'
+)
 
+# opening text
 with st.sidebar:
-    st.header("Digit Recognizer")
+    st.title("Digit Recognizer")
     st.markdown(":gray[_by Devan Anjelito_]")
     st.markdown("\n")
     st.markdown(
@@ -32,6 +41,7 @@ with st.sidebar:
     )
     st.divider()
 
+# model selection
 with st.sidebar:
     model = st.selectbox(
         "Select ML model:",
@@ -44,47 +54,55 @@ with st.sidebar:
             "Decision Tree",
         ),
     )
+    drawing_mode = st.selectbox("Drawing tool:", ("Freedraw", "Line", "Rect", "Circle"))
 
-    drawing_mode = st.selectbox("Drawing tool:", ("freedraw", "line", "rect", "circle"))
+# set columns
+col1, col2 = st.columns([0.3, 0.7], gap='large')
 
+# model description
+with col1:
 
-stroke_width = 40
-stroke_color = "black"
+    text_header = f'''You are using :blue[{model}] model!'''
+    st.subheader(text_header)
+    st.markdown(model_descriptions[model])
+    st.markdown(f'**Strength** : {model_strengths[model]}')
+    st.markdown(f'**Weakness** : {model_weaknesses[model]}')
 
-realtime_update = True
+# canvas and result
+with col2:
 
-st.header("Draw here and I will predict!")
+    st.markdown("Draw here and I will predict!")
 
-# create a canvas component
-canvas_result = st_canvas(
-    fill_color="rgba(255, 165, 0, 0.3)",
-    stroke_width=stroke_width,
-    stroke_color=stroke_color,
-    update_streamlit=realtime_update,
-    height=500,
-    width=500,
-    drawing_mode=drawing_mode,
-    key="canvas",
-)
+    # create a canvas component
+    canvas_result = st_canvas(
+        fill_color="rgba(255, 165, 0, 0.3)",
+        stroke_width=40,
+        stroke_color='black',
+        update_streamlit=True,
+        height=500,
+        width=500,
+        drawing_mode=drawing_mode.lower(),
+        key="canvas",
+    )
 
-# predict here
-img_rgba = canvas_result.image_data
-if img_rgba is not None:
-    # get alpha channel only
-    # convert to PIL image
-    img_gray = Image.fromarray(img_rgba[:, :, -1])
-    # resize
-    img_gray = img_gray.resize((28, 28))
-    # convert back to array
-    # flatten
-    img_flat = np.asarray(img_gray).reshape((1, 784))
+    # prediction
+    img_rgba = canvas_result.image_data
+    if img_rgba is not None:
+        # get alpha channel only
+        # convert to PIL image
+        img_gray = Image.fromarray(img_rgba[:, :, -1])
+        # resize
+        img_gray = img_gray.resize((28, 28))
+        # convert back to array
+        # flatten
+        img_flat = np.asarray(img_gray).reshape((1, 784))
 
-    # predict if there is image
-    if np.sum(img_rgba) != 0:
-        try:
-            with st.spinner("Wait for it, some models are slower than others..."):
-                y_pred = predict.predict(model=model, x=img_flat, with_preprocesing=True)
-            result = f"This is :red[{y_pred[0]}]!"
-            st.header(result)
-        except ValueError:
-            pass
+        # predict if there is image
+        if np.sum(img_rgba) != 0:
+            try:
+                with st.spinner("Wait for it, some models are slower than others..."):
+                    y_pred = predict.predict(model=model, x=img_flat, with_preprocesing=True)
+                result = f"This is :red[{y_pred[0]}]!"
+                st.header(result)
+            except ValueError:
+                pass
