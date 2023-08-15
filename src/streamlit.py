@@ -71,7 +71,7 @@ with col1:
 # canvas and result
 with col2:
 
-    st.markdown("Draw here and I will predict!")
+    st.subheader("Draw a number here and I will predict!")
 
     # create a canvas component
     canvas_result = st_canvas(
