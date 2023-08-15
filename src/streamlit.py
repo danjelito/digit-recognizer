@@ -65,6 +65,7 @@ with col1:
     st.markdown(model_descriptions[model])
     st.markdown(f'**Strength** : {model_strengths[model]}')
     st.markdown(f'**Weakness** : {model_weaknesses[model]}')
+    st.markdown('*To change model, use model selection on the left sidebar.*')
 
 # canvas and result
 with col2:
