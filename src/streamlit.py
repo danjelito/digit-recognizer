@@ -60,7 +60,7 @@ col1, col2 = st.columns([0.3, 0.7], gap='large')
 # model description
 with col1:
 
-    text_header = f'''You are using :blue[{model}] model!'''
+    text_header = f'''You are using :purple[{model}] model!'''
     st.subheader(text_header)
     st.markdown(model_descriptions[model])
     st.markdown(f'**Strength** : {model_strengths[model]}')
