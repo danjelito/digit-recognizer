@@ -100,7 +100,7 @@ with col2:
             try:
                 with st.spinner("Wait for it, some models are slower than others..."):
                     y_pred = predict.predict(model=model, x=img_flat, with_preprocesing=True)
-                result = f"This is :red[{y_pred[0]}]!"
+                result = f"This is :violet[{y_pred[0]}]!"
                 st.header(result)
             except ValueError:
                 pass
