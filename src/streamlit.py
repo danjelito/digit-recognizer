@@ -1,7 +1,5 @@
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
-from skimage.transform import resize_local_mean
-from skimage.color import rgb2gray
 import numpy as np
 from PIL import Image
 
